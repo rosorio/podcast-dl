@@ -1,4 +1,6 @@
 Tue Aug 14 2012.
+Summary for 0.3.1 podcastdl release
+	Fix missing DSO linking reference (for clang at least) 
 Summary for 0.3.0 podcastdl release
 	Convert the build system to CMake
 	Fix filename hadling using guid if available insted of enclosure_url
