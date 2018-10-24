@@ -19,7 +19,6 @@
 #include <unistd.h>
 #include <getopt.h>
 
-#include "podcastdl.h" 
 #include "podcast.h"
 #include "util.h"
 
@@ -33,7 +32,7 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
   mrss_error_t ret;
   mrss_item_t *item;
   char *encoding;
-  char *p_str, *p_name;
+  char *p_str, *p_name, * p_url;
   time_t feed_time;
   time_t now = time(NULL);
   mrss_category_t *tags;
@@ -57,7 +56,14 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
         
           /* extract the filename */
           p_name = NULL;
-          for(p_str = item->enclosure_url ; p_str != NULL ; p_str = strstr(p_str,"/")) {
+
+          /* If we have a gui, use it instead of the enclosure_url */
+          if(item->guid != NULL)
+            p_url = item->guid;
+          else
+            p_url = item->enclosure_url;
+
+          for(p_str = p_url ; p_str != NULL ; p_str = strstr(p_str,"/")) {
             p_name = ++p_str;
           }
 
@@ -69,10 +75,10 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
           }
           mrss_free(tags);
       
-          debug("   - URL %s\n", item->enclosure_url);
+          debug("   - URL %s\n", p_url);
           podcast_add_item( podcast,
                             item->title,
-                            item->enclosure_url,
+                            p_url,
                             item->enclosure_length,
                             feed_time,
                             taglist,
@@ -162,6 +168,7 @@ usage(void)
   printf(" -i : Add an additional  .info file with information about the podcast\n");
   printf(" -d <number> : Set the maximum number of days a podcast can have to be download\n");
   printf(" -v : Verbose mode for debug \n");
+  printf(" --version : Print the version number \n");
   exit(1);
 }
 

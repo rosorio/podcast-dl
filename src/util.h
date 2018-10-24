@@ -17,7 +17,7 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
-#include <sys/time.h>
+#include <time.h>
 
 #include <err.h>
 #include <errno.h>
