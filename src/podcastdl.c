@@ -47,13 +47,13 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
   
   debug("Parse feed %s\n",url);
   ret = mrss_parse_url_with_options_and_error(url,&feed,NULL,&code);
-  if(ret != MRSS_OK){
+  if (ret != MRSS_OK){
     warn("%s ",mrss_strerror(ret));
     return 1;
   }
 
   encoding = feed->encoding;
-  for(item = feed->item ; item ; item = item->next) {
+  for (item = feed->item ; item ; item = item->next) {
     if (feed->version == MRSS_VERSION_2_0 ){
 
         /* if we have a time contol perform the test */
@@ -65,19 +65,19 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
           p_name = NULL;
 
           /* If we have a gui, use it instead of the enclosure_url */
-          if(item->guid != NULL)
+          if (item->guid != NULL && item->guid_isPermaLink)
             p_url = item->guid;
           else
             p_url = item->enclosure_url;
 
-          for(p_str = p_url ; p_str != NULL ; p_str = strstr(p_str,"/")) {
+          for (p_str = p_url ; p_str != NULL ; p_str = strstr(p_str,"/")) {
             p_name = ++p_str;
           }
 
           /* Get the category/tags */
           memset((void*)taglist,0,MAX_FILENAME_LENGTH+1);
           for (tags = item->category; tags; tags = tags->next) {
-            if(strncat(taglist,tags->category,MAX_DESC_LENGTH - strlen(tags->category)-1))
+            if (strncat(taglist,tags->category,MAX_DESC_LENGTH - strlen(tags->category)-1))
               strcat(taglist,";");
           }
           mrss_free(tags);
@@ -120,7 +120,7 @@ get_podcast_item(podcast_item_t * item,char * dir)
     sprintf(tmpFilename,"%s.part",filename);
     if (access(filename, F_OK | R_OK) == -1 ) {
       fd = fopen(tmpFilename, "w+");
-      if(NULL == fd)
+      if (NULL == fd)
         err(errno,"Can't create file : %s\n",tmpFilename);
 
       curl = curl_easy_init();
@@ -133,17 +133,17 @@ get_podcast_item(podcast_item_t * item,char * dir)
       curl_easy_setopt(curl, CURLOPT_WRITEDATA ,fd);
       ret = curl_easy_perform(curl);
       fclose(fd);
-      if(ret)
+      if (ret)
         warn("Error %d downloading file : %s",ret,item->url);
       else {
-        if( rename(tmpFilename,filename) ) {
+        if ( rename(tmpFilename,filename) ) {
           warn("Can't rename file from %s to %s",tmpFilename,filename);
         } else {
-          if(info_flag) {
+          if (info_flag) {
             /* Add extra informations for the file */
             sprintf(tmpFilename,"%s.info",filename);
             fd = fopen(tmpFilename,"w+");
-            if( NULL == fd)
+            if ( NULL == fd)
               warn("Can't create file %s\n",filename);
             else {
               dt = localtime(&item->date);
@@ -216,12 +216,12 @@ main (int argc, char * argv[])
         break;
       case 'o':
         out_dir = optarg;
-        if(access(out_dir, F_OK | W_OK | R_OK ) == -1 )
+        if (access(out_dir, F_OK | W_OK | R_OK ) == -1 )
           err(1, "%s", out_dir);
         break;
       case 'c':
         conf_file = optarg;
-        if(access(conf_file, F_OK | R_OK) == -1 )
+        if (access(conf_file, F_OK | R_OK) == -1 )
           err(1, "%s", conf_file);
         break;
       case 'l':
@@ -238,7 +238,7 @@ main (int argc, char * argv[])
         verbose_flag++;
         break;
       case 0: /* GNU convention */
-        if(strcmp("version",longOpts[longIndex].name ) == 0)
+        if (strcmp("version",longOpts[longIndex].name ) == 0)
           version();
         break;
       case '?':
@@ -248,15 +248,15 @@ main (int argc, char * argv[])
   argc -= optind;
   argv += optind;
 
-  if(!out_dir || !conf_file )
+  if (!out_dir || !conf_file )
     usage();
 
   podcast_set(&podcast);
 
   fd = fopen(conf_file,"r");
-  if(fd)
+  if (fd)
   { 
-    while( fgets(url,MAX_URL_LENGTH,fd) )
+    while ( fgets(url,MAX_URL_LENGTH,fd) )
       get_podcast_list(url,&podcast,maxdays);
   }
   

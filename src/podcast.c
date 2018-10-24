@@ -27,20 +27,20 @@ podcast_add_item( podcast_head_t * podcast, char * title, char * url, int length
 
   podcast_item_t * item;    
 
-  if(strlen(url) > MAX_URL_LENGTH)
+  if (strlen(url) > MAX_URL_LENGTH)
   {
     warn("The URL string is too long : %s",url);
     return NULL;
   }
 
-  if(title && strlen(title) > MAX_DESC_LENGTH)
+  if (title && strlen(title) > MAX_DESC_LENGTH)
   {
     warn("The title  string is too long : %s",url);
     return NULL;
   }
 
   item = (podcast_item_t *)malloc(sizeof(podcast_item_t));    
-  if(NULL == item)
+  if (NULL == item)
     err(errno,"Memory allocation error");
 
   /* Fill the struct */
@@ -80,7 +80,7 @@ podcast_free( podcast_head_t * podcast )
   podcast_item_t *temp,
                  *item = podcast->first;
 
-  while(item) {
+  while (item) {
     temp = item; 
     item = item->next;
     free(temp);

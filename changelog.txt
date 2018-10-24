@@ -1,3 +1,7 @@
+Tue April 19 2016.
+Summary for 0.3.3 podcastdl release
+	Fix a mistake recovering the URL from the rss when the GUID is not a permalink  
+
 Tue June 13 2015.
 Summary for 0.3.2 podcastdl release
 	Fix a bug caused by changes in the url control by curl
