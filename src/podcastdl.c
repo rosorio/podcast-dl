@@ -37,6 +37,13 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
   time_t now = time(NULL);
   mrss_category_t *tags;
   char taglist[MAX_FILENAME_LENGTH + 1];
+  char * p;
+
+  p = strpbrk(url, "\r\n");
+  if (p != NULL) {
+    *p = '\0';
+  }
+
   
   debug("Parse feed %s\n",url);
   ret = mrss_parse_url_with_options_and_error(url,&feed,NULL,&code);
@@ -175,7 +182,7 @@ usage(void)
 static void
 version(void)
 {
-  printf("podcastdl %s, Copyright (c) 2010  Rodrigo OSORIO <ros@bebik.net>\n",
+  printf("podcastdl %s, wrote by Rodrigo OSORIO <ros@bebik.net>\n",
          PODCASTDL_VERSION_STRING);
   exit(0);
 }
