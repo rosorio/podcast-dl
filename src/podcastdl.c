@@ -72,6 +72,16 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
             p_name = ++p_str;
           }
 
+          /* If question mark found remove everything after it */
+          p_str = strstr(p_name,"?");
+          if ( p_str != NULL) {
+            int len = p_str-p_name;
+            p_str = malloc(len+1);
+            strncpy(p_str,p_name,len);
+            p_str[len] = 0;
+            p_name = p_str;
+          }
+
           /* Get the category/tags */
           memset((void*)taglist,0,MAX_FILENAME_LENGTH+1);
           for (tags = item->category; tags; tags = tags->next) {
