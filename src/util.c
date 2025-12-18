@@ -67,6 +67,10 @@ iso8601_to_time_t(char *s)
 {
   struct tm date;
   time_t t;
+
+  memset(&date, 0, sizeof(date));
+  date.tm_isdst = -1;
+
   errno = 0;
   char *pos = strptime(s, "%Y-%m-%dT%H:%M:%S.%fZ", &date);
   if (pos == NULL) {
@@ -99,6 +103,9 @@ rfc822_to_time_t(char *s)
   struct tm date;
   time_t t;
   errno = 0;
+
+  memset(&date, 0, sizeof(date));
+  date.tm_isdst = -1;
 
   if (s == NULL) {
     warn("Invalide empty date");
