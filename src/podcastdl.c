@@ -31,7 +31,6 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
   CURLcode code;
   mrss_error_t ret;
   mrss_item_t *item;
-  char *encoding;
   char *p_str, *p_name, * p_url;
   time_t feed_time;
   time_t now = time(NULL);
@@ -52,7 +51,6 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
     return 1;
   }
 
-  encoding = feed->encoding;
   for (item = feed->item ; item ; item = item->next) {
     if (feed->version == MRSS_VERSION_2_0 ){
 
