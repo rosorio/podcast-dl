@@ -2,7 +2,7 @@ VERSION=0.2.1
 CC=		gcc
 INCLUDES=	-I/usr/local/include 
 LIBDIR=		-L/usr/local/lib
-LIBS=		-lmrss
+LIBS=		-lmrss -lcurl
 LDFLAGS+=	${LIBDIR}
 
 OPSYS!=         uname
