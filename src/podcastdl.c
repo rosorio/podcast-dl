@@ -125,7 +125,6 @@ get_podcast_item(podcast_item_t * item,char * dir)
     FILE * fd;
     struct tm * dt;
     
-    debug("downloading file : %s\n",item->url);
     if (snprintf(filename, MAX_FILEPATH_LENGTH, "%s/%s",dir,item->filename) < 0) {
         err(errno,"Filename is to long: %s\n", item->filename);
         return;
@@ -136,6 +135,7 @@ get_podcast_item(podcast_item_t * item,char * dir)
     }
 
     if (access(filename, F_OK | R_OK) == -1 ) {
+      debug("downloading file : %s\n",item->url);
       fd = fopen(tmpFilename, "w+");
       if (NULL == fd)
         err(errno,"Can't create file : %s\n",tmpFilename);
@@ -178,6 +178,8 @@ get_podcast_item(podcast_item_t * item,char * dir)
       }
 
       curl_easy_cleanup(curl);
+    } else {
+        debug("skip file (exist) : %s\n",item->url);
     }
 }
 
