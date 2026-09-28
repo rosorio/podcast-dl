@@ -68,6 +68,11 @@ iso8601_to_time_t(char *s)
   struct tm date;
   time_t t;
   errno = 0;
+
+  /* init tm struct */
+  memset(&date, 0, sizeof(date));
+  date.tm_isdst = -1;
+
   char *pos = strptime(s, "%Y-%m-%dT%H:%M:%S.%fZ", &date);
   if (pos == NULL) {
     /* Modify the last HH:MM to HHMM if necessary */
