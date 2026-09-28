@@ -71,7 +71,18 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
             p_url = item->enclosure_url;
 
           for (p_str = p_url ; p_str != NULL ; p_str = strstr(p_str,"/")) {
-            p_name = ++p_str;
+            tmp_name = ++p_str;
+          }
+
+          /* If question mark found remove everything after it */
+          p_str = strstr(tmp_name,"?");
+          if (p_str != NULL) {
+            len = p_str - tmp_name;
+            p_name = malloc(len + 1);
+            strncpy(p_name, tmp_name, len);
+            p_name[len] = 0;
+          } else {
+            p_name = strdup(tmp_name);
           }
 
           /* Get the category/tags */
