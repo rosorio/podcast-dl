@@ -1,6 +1,6 @@
 include_directories(${PODCASTDL_SOURCE_DIR}/src /usr/include /usr/local/include)
 link_directories(${PODCASTDL_SOURCE_DIR}/src /usr/lib /usr/local/lib)
-add_definitions( -DPODCASTDL_VERSION_STRING=\"0.3.4\" )
+add_definitions( -DPODCASTDL_VERSION_STRING=\"0.4.0\" )
 
 
 add_executable(podcastdl podcastdl.c podcast.c util.c)
