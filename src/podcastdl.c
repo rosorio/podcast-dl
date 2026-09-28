@@ -182,7 +182,7 @@ usage(void)
 static void
 version(void)
 {
-  printf("podcastdl %s, wrote by Rodrigo OSORIO <ros@bebik.net>\n",
+  printf("podcastdl %s, wrote by Rodrigo Osorio <rodrigo@osorio.me>\n",
          PODCASTDL_VERSION_STRING);
   exit(0);
 }
