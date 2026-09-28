@@ -32,12 +32,13 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
   mrss_error_t ret;
   mrss_item_t *item;
   char *encoding;
-  char *p_str, *p_name, * p_url;
+  char *p_str, *p_name, *p_url, *tmp_name;
   time_t feed_time;
   time_t now = time(NULL);
   mrss_category_t *tags;
   char taglist[MAX_FILENAME_LENGTH + 1];
   char * p;
+  int len = 0;
 
   p = strpbrk(url, "\r\n");
   if (p != NULL) {
@@ -63,6 +64,7 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
         
           /* extract the filename */
           p_name = NULL;
+          tmp_name = NULL;
 
           /* If we have a gui, use it instead of the enclosure_url */
           if (item->guid != NULL && item->guid_isPermaLink)
@@ -70,8 +72,16 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
           else
             p_url = item->enclosure_url;
 
+
           for (p_str = p_url ; p_str != NULL ; p_str = strstr(p_str,"/")) {
-            p_name = ++p_str;
+            tmp_name = ++p_str;
+          }
+
+          /* If question mark found remove everything after it */
+          p_name = strdup(tmp_name);
+          p_str = strstr(p_name,"?");
+          if (p_str != NULL) {
+            *p_str = 0;
           }
 
           /* Get the category/tags */
@@ -90,6 +100,8 @@ get_podcast_list(char * url, podcast_head_t * podcast,int maxdays)
                             feed_time,
                             taglist,
                             p_name);
+
+          free(p_name);
         }
     } else {
       warn("The RSS is not in V2 : %s\n",url);
