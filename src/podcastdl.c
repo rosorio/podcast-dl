@@ -128,8 +128,15 @@ get_podcast_item(podcast_item_t * item,char * dir)
     struct tm * dt;
     
     debug("downloading file : %s\n",item->url);
-    sprintf(filename,"%s/%s",dir,item->filename);
-    sprintf(tmpFilename,"%s.part",filename);
+    if (snprintf(filename, MAX_FILEPATH_LENGTH, "%s/%s",dir,item->filename) < 0) {
+        err(errno,"Filename is to long: %s\n", item->filename);
+        return;
+    }
+    if (snprintf(tmpFilename, MAX_FILEPATH_LENGTH, "%s.part",filename) < 0) {
+        err(errno,"Temporary filename is to long %s\n", filename);
+        return;
+    }
+
     if (access(filename, F_OK | R_OK) == -1 ) {
       fd = fopen(tmpFilename, "w+");
       if (NULL == fd)
